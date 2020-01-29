@@ -1,10 +1,10 @@
 from traits.api import (
     Either,
     Enum,
-    Unicode,
     HasRequiredTraits,
     Int,
     Tuple,
+    Unicode,
 )
 
 LIFE = "Life"

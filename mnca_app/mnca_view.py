@@ -1,13 +1,13 @@
 import numpy as np
 from traits.api import Instance, Button
 from traitsui.api import (
-    ModelView,
-    VSplit,
     HSplit,
+    Item,
+    ModelView,
+    UItem,
     VGroup,
     View,
-    Item,
-    UItem,
+    VSplit,
 )
 
 from mnca_app.rule import Rule, LIFE, DEATH

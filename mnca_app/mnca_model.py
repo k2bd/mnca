@@ -6,12 +6,12 @@ from scipy.ndimage import convolve
 from traits.api import (
     Array,
     Bool,
-    HasRequiredTraits,
-    Range,
-    Float,
     Dict,
+    Float,
+    HasRequiredTraits,
     List,
     on_trait_change,
+    Range,
     Tuple,
     Unicode,
 )
