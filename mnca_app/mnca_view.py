@@ -47,6 +47,7 @@ class MncaView(ModelView):
                     VGroup(
                         Item("model.paused", label="Pause"),
                         Item("model.board_size"),
+                        Item("model.rules"),
                         Item("randomize_rules"),
                     ),
                     VGroup(
@@ -68,21 +69,21 @@ if __name__ == "__main__":
 
     import os
     # Add masks
-    mask_files = ["mask_a.txt", "mask_b.txt", "mask_c.txt", "mask_d.txt"]
-    model.masks = []
+    mask_files = ["mask_a", "mask_b", "mask_c", "mask_d"]
+    model.masks = {}
     for m_file in mask_files:
-        with open(os.path.join("mnca_app", "data", "masks", m_file), "r") as f:
+        with open(os.path.join("mnca_app", "data", "masks", m_file+".txt"), "r") as f:
             mask = [[int(n) for n in line.split()] for line in f.readlines()]
-            model.masks.append(np.array(mask))
+            model.masks[m_file] = np.array(mask)
 
     # Add rules
     model.rules = [
-        Rule(mask=model.masks[0], limits=(0, 17), result=DEATH),
-        Rule(mask=model.masks[0], limits=(40, 42), result=LIFE),
-        Rule(mask=model.masks[1], limits=(10, 13), result=LIFE),
-        Rule(mask=model.masks[2], limits=(9, 21), result=DEATH),
-        Rule(mask=model.masks[3], limits=(78, 89), result=DEATH),
-        Rule(mask=model.masks[3], limits=(108, None), result=DEATH),
+        Rule(mask=mask_files[0], limits=(0, 17), result=DEATH),
+        Rule(mask=mask_files[0], limits=(40, 42), result=LIFE),
+        Rule(mask=mask_files[1], limits=(10, 13), result=LIFE),
+        Rule(mask=mask_files[2], limits=(9, 21), result=DEATH),
+        Rule(mask=mask_files[3], limits=(78, 89), result=DEATH),
+        Rule(mask=mask_files[3], limits=(108, None), result=DEATH),
     ]
 
     view = MncaView(model=model)

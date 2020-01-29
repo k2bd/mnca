@@ -52,8 +52,8 @@ class MncaModel(HasRequiredTraits):
         print("----------")
         print("New Rules:")
         for i in range(random.randint(2, 10)):
-            m = random.randint(0, len(self.masks)-1)
-            mask = self.masks[m]
+            mask_name = random.choice(list(self.masks.keys()))
+            mask = self.masks[mask_name]
 
             r_a, r_b = (
                 random.randint(0, np.sum(mask)),
@@ -64,8 +64,8 @@ class MncaModel(HasRequiredTraits):
 
             result = random.choice([DEATH, LIFE])
 
-            rules.append(Rule(mask=mask, limits=(lower, upper), result=result))
-            print(f"Rule(mask=masks[{m}], limits=({lower}, {upper}), result={result})")
+            rules.append(Rule(mask=mask_name, limits=(lower, upper), result=result))
+            print(f"Rule(mask=masks[{mask_name}], limits=({lower}, {upper}), result={result})")
         print("----------")
 
         self.rules = rules
