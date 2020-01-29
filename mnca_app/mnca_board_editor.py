@@ -27,8 +27,8 @@ class _BoolArrayEditor(Editor):
     def update_editor(self):
         img = QtGui.QImage(
             self.object.board.astype(np.int8).data,
-            self.object.board_size[0],
             self.object.board_size[1],
+            self.object.board_size[0],
             QtGui.QImage.Format_Indexed8
         )
         img.setColorTable(COLORTABLE)

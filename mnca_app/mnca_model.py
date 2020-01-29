@@ -11,6 +11,7 @@ from traits.api import (
     HasRequiredTraits,
     Int,
     Range,
+    Float,
     List,
     on_trait_change,
     Tuple,
@@ -28,8 +29,8 @@ class MncaModel(HasRequiredTraits):
     #: Board size (X, Y)
     board_size = Tuple(Range(1, 500), Range(1, 500), required=True)
 
-    #: Reset style (random noise, zeros, ...)
-    reset_style = Enum(RANDOM, ZEROS, required=True)
+    #: % of living cells on reset
+    reset_life_pct = Float(0.5)
 
     #: Board for the MNCA
     board = Array(shape=(None, None))
@@ -45,6 +46,7 @@ class MncaModel(HasRequiredTraits):
 
     @on_trait_change("board_size")
     def reset_board(self):
+        self.board = np.ones(self.board_size, dtype=int)
         self.board_reset()
 
     def randomize_rules(self):
@@ -68,10 +70,10 @@ class MncaModel(HasRequiredTraits):
         self.rules = rules
 
     def board_reset(self):
-        if self.reset_style == RANDOM:
-            self.board = np.random.randint(0, 2, self.board_size)
-        elif self.reset_style == ZEROS:
-            self.board = np.zeros(self.board_size)
+        #self.board = np.zeros_like(self.board)
+        for i in range(self.board_size[0]):
+            for j in range(self.board_size[1]):
+                self.board[i, j] = 1 if random.random() < self.reset_life_pct else 0
 
     def evolve_board(self):
         """

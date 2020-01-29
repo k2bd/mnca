@@ -2,6 +2,7 @@ import numpy as np
 from traits.api import Instance, Button
 from traitsui.api import (
     ModelView,
+    VSplit,
     HSplit,
     VGroup,
     View,
@@ -40,11 +41,16 @@ class MncaView(ModelView):
                         #update_ms=600,
                     ),
                 ),
-                VGroup(
-                    Item("model.paused", label="Pause"),
-                    Item("model.board_size"),
-                    Item("randomize_rules"),
-                    Item("reset_board"),
+                VSplit(
+                    VGroup(
+                        Item("model.paused", label="Pause"),
+                        Item("model.board_size"),
+                        Item("randomize_rules"),
+                    ),
+                    VGroup(
+                        Item("model.reset_life_pct", label="Reset Life %"),
+                        Item("reset_board"),
+                    )
                 ),
             ),
             resizable=True,
@@ -55,7 +61,6 @@ class MncaView(ModelView):
 if __name__ == "__main__":
     model = MncaModel(
         board_size=(500, 500),
-        reset_style=RANDOM,
     )
 
     import os
