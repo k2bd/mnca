@@ -1,9 +1,11 @@
-import numpy as np
+import random
 
+import numpy as np
 from scipy.ndimage import convolve
 
 from traits.api import (
     Array,
+    Event,
     Bool,
     Enum,
     HasRequiredTraits,
@@ -32,6 +34,9 @@ class MncaModel(HasRequiredTraits):
     #: Board for the MNCA
     board = Array(shape=(None, None))
 
+    #: Available masks
+    masks = List(Array(shape=(None, None)))
+
     #: Rules
     rules = List(Rule, required=False)
 
@@ -39,10 +44,30 @@ class MncaModel(HasRequiredTraits):
     paused = Bool(False)
 
     @on_trait_change("board_size")
-    def change_board_size(self):
-        self.reset_board()
-
     def reset_board(self):
+        self.board_reset()
+
+    def randomize_rules(self):
+        rules = []
+        print("----------")
+        print("New Rules:")
+        for i in range(random.randint(2, 10)):
+            m = random.randint(0, len(self.masks)-1)
+            mask = self.masks[m]
+
+            r_a, r_b = random.randint(0, np.sum(mask)), random.randint(0, (np.sum(mask)))
+            lower = min([r_a, r_b])
+            upper = max([r_a, r_b])
+
+            result = random.choice([DEATH, LIFE])
+
+            rules.append(Rule(mask=mask, limits=(lower, upper), result=result))
+            print(f"Rule(mask=masks[{m}], limits=({lower}, {upper}), result={result})")
+        print("----------")
+
+        self.rules = rules
+
+    def board_reset(self):
         if self.reset_style == RANDOM:
             self.board = np.random.randint(0, 2, self.board_size)
         elif self.reset_style == ZEROS:

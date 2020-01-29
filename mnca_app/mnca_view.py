@@ -1,5 +1,5 @@
 import numpy as np
-from traits.api import Instance
+from traits.api import Instance, Button
 from traitsui.api import (
     ModelView,
     HSplit,
@@ -18,6 +18,16 @@ class MncaView(ModelView):
 
     model = Instance(MncaModel, allow_none=False)
 
+    randomize_rules = Button("Randomize Rules")
+
+    def _randomize_rules_fired(self):
+        self.model.randomize_rules()
+
+    reset_board = Button("Reset Board")
+
+    def _reset_board_fired(self):
+        self.model.reset_board()
+
     def default_traits_view(self):
         view = View(
             HSplit(
@@ -27,12 +37,14 @@ class MncaView(ModelView):
                         scale=True,
                         allow_upscaling=False,
                         allow_clipping=True,
-                        update_ms=600,
+                        #update_ms=600,
                     ),
                 ),
                 VGroup(
                     Item("model.paused", label="Pause"),
                     Item("model.board_size"),
+                    Item("randomize_rules"),
+                    Item("reset_board"),
                 ),
             ),
             resizable=True,
@@ -47,27 +59,22 @@ if __name__ == "__main__":
     )
 
     import os
+    # Add masks
     mask_files = ["mask_a.txt", "mask_b.txt", "mask_c.txt", "mask_d.txt",]
-    masks = []
+    model.masks = []
     for m_file in mask_files:
         with open(os.path.join("mnca_app", "data", "masks", m_file), "r") as f:
             mask = [[int(n) for n in line.split()] for line in f.readlines()]
-            masks.append(np.array(mask))
-    #model.rules = [
-    #    Rule(mask=masks[2], limits=(38, 53), result=DEATH),
-    #    Rule(mask=masks[0], limits=(8, 60), result=LIFE),
-    #    Rule(mask=masks[3], limits=(53, 68), result=DEATH),
-    #    Rule(mask=masks[2], limits=(45, 97), result=DEATH),
-    #    Rule(mask=masks[3], limits=(12, 54), result=LIFE),
-    #    Rule(mask=masks[2], limits=(0, 15), result=DEATH),
-    #]
+            model.masks.append(np.array(mask))
+
+    # Add rules
     model.rules = [
-        Rule(mask=masks[0], limits=(0, 17), result=DEATH),
-        Rule(mask=masks[0], limits=(40, 42), result=LIFE),
-        Rule(mask=masks[1], limits=(10, 13), result=LIFE),
-        Rule(mask=masks[2], limits=(9, 21), result=DEATH),
-        Rule(mask=masks[3], limits=(78, 89), result=DEATH),
-        Rule(mask=masks[3], limits=(108, None), result=DEATH),
+        Rule(mask=model.masks[0], limits=(0, 17), result=DEATH),
+        Rule(mask=model.masks[0], limits=(40, 42), result=LIFE),
+        Rule(mask=model.masks[1], limits=(10, 13), result=LIFE),
+        Rule(mask=model.masks[2], limits=(9, 21), result=DEATH),
+        Rule(mask=model.masks[3], limits=(78, 89), result=DEATH),
+        Rule(mask=model.masks[3], limits=(108, None), result=DEATH),
     ]
 
     view = MncaView(model=model)
