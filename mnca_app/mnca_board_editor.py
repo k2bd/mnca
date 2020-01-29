@@ -7,8 +7,7 @@ from traitsui.api import BasicEditorFactory
 from traitsui.qt4.editor import Editor
 from traitsui.qt4.image_editor import QImageView
 
-COLORTABLE=[QtGui.qRgb(0,0,0), QtGui.qRgb(255,255,255)]
-#for i in range(256): COLORTABLE.append()
+COLORTABLE = [QtGui.qRgb(0, 0, 0), QtGui.qRgb(255, 255, 255)]
 
 
 class _BoolArrayEditor(Editor):

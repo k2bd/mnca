@@ -11,7 +11,7 @@ from traitsui.api import (
 )
 
 from mnca_app.rule import Rule, LIFE, DEATH
-from mnca_app.mnca_model import MncaModel, RANDOM
+from mnca_app.mnca_model import MncaModel
 from mnca_app.mnca_board_editor import BoolArrayEditor
 
 
@@ -39,7 +39,6 @@ class MncaView(ModelView):
                         allow_upscaling=False,
                         allow_clipping=False,
                         preserve_aspect_ratio=True,
-                        #update_ms=600,
                     ),
                     resizable=True,
                     springy=True,
@@ -69,7 +68,7 @@ if __name__ == "__main__":
 
     import os
     # Add masks
-    mask_files = ["mask_a.txt", "mask_b.txt", "mask_c.txt", "mask_d.txt",]
+    mask_files = ["mask_a.txt", "mask_b.txt", "mask_c.txt", "mask_d.txt"]
     model.masks = []
     for m_file in mask_files:
         with open(os.path.join("mnca_app", "data", "masks", m_file), "r") as f:

@@ -1,9 +1,7 @@
-import numpy as np
-
 from traits.api import (
-    Array,
     Either,
     Enum,
+    Unicode,
     HasRequiredTraits,
     Int,
     Tuple,
@@ -16,7 +14,7 @@ PASS = "Pass"
 
 class Rule(HasRequiredTraits):
     # Mask the rule applies to
-    mask = Array(shape=(None, None), required=True)
+    mask = Unicode(required=True)
 
     #: Rule limits (inclusive!), or None if there is no bound
     #: TODO: limits should match dtype if we want continuous MNCAs

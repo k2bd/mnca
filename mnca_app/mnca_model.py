@@ -5,20 +5,18 @@ from scipy.ndimage import convolve
 
 from traits.api import (
     Array,
-    Event,
     Bool,
-    Enum,
     HasRequiredTraits,
-    Int,
     Range,
     Float,
+    Dict,
     List,
     on_trait_change,
     Tuple,
     Unicode,
 )
 
-from mnca_app.rule import Rule, LIFE, DEATH, PASS
+from mnca_app.rule import Rule, LIFE, DEATH
 
 RANDOM = "Random"
 ZEROS = "Zeros"
@@ -35,8 +33,8 @@ class MncaModel(HasRequiredTraits):
     #: Board for the MNCA
     board = Array(shape=(None, None))
 
-    #: Available masks
-    masks = List(Array(shape=(None, None)))
+    #: Available masks (name to array)
+    masks = Dict(Unicode, Array(shape=(None, None)))
 
     #: Rules
     rules = List(Rule, required=False)
@@ -57,7 +55,10 @@ class MncaModel(HasRequiredTraits):
             m = random.randint(0, len(self.masks)-1)
             mask = self.masks[m]
 
-            r_a, r_b = random.randint(0, np.sum(mask)), random.randint(0, (np.sum(mask)))
+            r_a, r_b = (
+                random.randint(0, np.sum(mask)),
+                random.randint(0, (np.sum(mask)))
+            )
             lower = min([r_a, r_b])
             upper = max([r_a, r_b])
 
@@ -70,7 +71,6 @@ class MncaModel(HasRequiredTraits):
         self.rules = rules
 
     def board_reset(self):
-        #self.board = np.zeros_like(self.board)
         for i in range(self.board_size[0]):
             for j in range(self.board_size[1]):
                 self.board[i, j] = 1 if random.random() < self.reset_life_pct else 0
@@ -94,7 +94,7 @@ class MncaModel(HasRequiredTraits):
         for rule in self.rules:
             if not gridmask.any():
                 break
-            convolve(self.board, rule.mask, mode="wrap", output=convgrid)
+            convolve(self.board, self.masks[rule.mask], mode="wrap", output=convgrid)
             if rule.limits[0] is not None:
                 rule1 = np.where(convgrid >= rule.limits[0], 1, 0)
             else:
