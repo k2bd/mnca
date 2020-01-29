@@ -37,9 +37,12 @@ class MncaView(ModelView):
                     editor=BoolArrayEditor(
                         scale=True,
                         allow_upscaling=False,
-                        allow_clipping=True,
+                        allow_clipping=False,
+                        preserve_aspect_ratio=True,
                         #update_ms=600,
                     ),
+                    resizable=True,
+                    springy=True,
                 ),
                 VSplit(
                     VGroup(
@@ -52,6 +55,7 @@ class MncaView(ModelView):
                         Item("reset_board"),
                     )
                 ),
+                springy=True,
             ),
             resizable=True,
         )
@@ -60,7 +64,7 @@ class MncaView(ModelView):
 
 if __name__ == "__main__":
     model = MncaModel(
-        board_size=(500, 500),
+        board_size=(400, 400),
     )
 
     import os
