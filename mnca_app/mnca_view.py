@@ -1,9 +1,13 @@
 import numpy as np
 from traits.api import Instance, Button
 from traitsui.api import (
+    EnumEditor,
     HSplit,
     Item,
     ModelView,
+    ObjectColumn,
+    TableEditor,
+    TextEditor,
     UItem,
     VGroup,
     View,
@@ -13,6 +17,13 @@ from traitsui.api import (
 from mnca_app.rule import Rule, LIFE, DEATH
 from mnca_app.mnca_model import MncaModel
 from mnca_app.mnca_board_editor import BoolArrayEditor
+
+
+def optional_int_editor():
+    return TextEditor(
+        evaluate=lambda x: int(x) if x != "" else None,
+        format_func=lambda x: str(x) if x is not None else "",
+    )
 
 
 class MncaView(ModelView):
@@ -28,6 +39,41 @@ class MncaView(ModelView):
 
     def _reset_board_fired(self):
         self.model.reset_board()
+
+    def rules_table(self):
+        return TableEditor(
+            sortable=False,
+            auto_size=True,
+            orientation="vertical",
+            edit_view=View(
+                Item("mask", editor=EnumEditor(values=sorted(self.model.masks.keys()))),
+                Item("lower_limit", editor=optional_int_editor()),
+                Item("upper_limit", editor=optional_int_editor()),
+                Item("result"),
+            ),
+            columns=[
+                ObjectColumn(
+                    name="mask",
+                    label="Mask",
+                    editable=False,
+                ),
+                ObjectColumn(
+                    name="lower_limit",
+                    label="Lower",
+                    editable=False,
+                ),
+                ObjectColumn(
+                    name="upper_limit",
+                    label="Upper",
+                    editable=False,
+                ),
+                ObjectColumn(
+                    name="result",
+                    label="Result",
+                    editable=False,
+                )
+            ]
+        )
 
     def default_traits_view(self):
         view = View(
@@ -54,8 +100,8 @@ class MncaView(ModelView):
                     )
                 ),
                 VGroup(
-                    Item("model.rules"),
-                    Item("randomize_rules"),
+                    UItem("model.rules", editor=self.rules_table()),
+                    UItem("randomize_rules"),
                 ),
                 springy=True,
             ),
@@ -80,15 +126,15 @@ if __name__ == "__main__":
 
     # Add rules
     model.rules = [
-        Rule(mask="8_neighbor.txt", limits=(3, 7), result=DEATH),
-        Rule(mask="8_neighbor.txt", limits=(2, 5), result=DEATH),
-        Rule(mask="1w1l.txt", limits=(1, 1), result=DEATH),
-        Rule(mask="1w1l.txt", limits=(1, 4), result=LIFE),
-        Rule(mask="9_neighbor.txt", limits=(6, 9), result=LIFE),
-        Rule(mask="1w2l.txt", limits=(1, 5), result=LIFE),
-        Rule(mask="9_neighbor.txt", limits=(0, 7), result=DEATH),
-        Rule(mask="9_neighbor.txt", limits=(1, 4), result=LIFE),
-        Rule(mask="8_neighbor.txt", limits=(6, 8), result=DEATH),
+        Rule(mask="8_neighbor.txt", lower_limit=3, upper_limit=7, result=DEATH),
+        Rule(mask="8_neighbor.txt", lower_limit=2, upper_limit=5, result=DEATH),
+        Rule(mask="1w1l.txt", lower_limit=1, upper_limit=1, result=DEATH),
+        Rule(mask="1w1l.txt", lower_limit=1, upper_limit=4, result=LIFE),
+        Rule(mask="9_neighbor.txt", lower_limit=6, upper_limit=9, result=LIFE),
+        Rule(mask="1w2l.txt", lower_limit=1, upper_limit=5, result=LIFE),
+        Rule(mask="9_neighbor.txt", lower_limit=0, upper_limit=7, result=DEATH),
+        Rule(mask="9_neighbor.txt", lower_limit=1, upper_limit=4, result=LIFE),
+        Rule(mask="8_neighbor.txt", lower_limit=6, upper_limit=8, result=DEATH),
     ]
 
     view = MncaView(model=model)

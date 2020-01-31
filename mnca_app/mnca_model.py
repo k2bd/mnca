@@ -47,6 +47,17 @@ class MncaModel(HasRequiredTraits):
         self.board = np.ones(self.board_size, dtype=int)
         self.board_reset()
 
+    @on_trait_change("rules[]")
+    def print_new_rules(self):
+        print("----------")
+        for rule in self.rules:
+            print(
+                "Rule(mask=masks['{rule.mask}'], "
+                "lower_limit={rule.lower_limit}, "
+                "upper_limit={rule.upper_limit}, "
+                "result={rule.result})".format(rule=rule)
+            )
+
     def randomize_rules(self):
         rules = []
         print("----------")
@@ -64,9 +75,14 @@ class MncaModel(HasRequiredTraits):
 
             result = random.choice([DEATH, LIFE])
 
-            rules.append(Rule(mask=mask_name, limits=(lower, upper), result=result))
-            print(f"Rule(mask=masks['{mask_name}'], limits=({lower}, {upper}), result={result})")
-        print("----------")
+            rules.append(
+                Rule(
+                    mask=mask_name,
+                    lower_limit=lower,
+                    upper_limit=upper,
+                    result=result
+                )
+            )
 
         self.rules = rules
 
@@ -95,13 +111,13 @@ class MncaModel(HasRequiredTraits):
             if not gridmask.any():
                 break
             convolve(self.board, self.masks[rule.mask], mode="wrap", output=convgrid)
-            if rule.limits[0] is not None:
-                rule1 = np.where(convgrid >= rule.limits[0], 1, 0)
+            if rule.lower_limit is not None:
+                rule1 = np.where(convgrid >= rule.lower_limit, 1, 0)
             else:
                 rule1[:] = 1
 
-            if rule.limits[1] is not None:
-                rule2 = np.where(convgrid <= rule.limits[1], 1, 0)
+            if rule.upper_limit is not None:
+                rule2 = np.where(convgrid <= rule.upper_limit, 1, 0)
             else:
                 rule2[:] = 1
 

@@ -18,6 +18,7 @@ class Rule(HasRequiredTraits):
 
     #: Rule limits (inclusive!), or None if there is no bound
     #: TODO: limits should match dtype if we want continuous MNCAs
-    limits = Tuple(Either(Int, None), Either(Int, None), required=True)
+    lower_limit = Either(Int, None, required=True)
+    upper_limit = Either(Int, None, required=True)
 
     result = Enum(LIFE, DEATH, required=True)
