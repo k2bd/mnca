@@ -11,9 +11,18 @@ COLORTABLE = [QtGui.qRgb(0, 0, 0), QtGui.qRgb(255, 255, 255)]
 
 
 class _BoolArrayEditor(Editor):
+
+    drawing = Bool
+
     def init(self, parent):
         self.control = QImageView()
         self._widget = QtGui.QWidget()
+
+        self.drawing = False
+
+        self.control.mousePressEvent = self.set_drawing
+        self.control.mouseReleaseEvent = self.unset_drawing
+        self.control.mouseMoveEvent = self.draw_pixel
 
         self.update_editor()
 
@@ -22,6 +31,20 @@ class _BoolArrayEditor(Editor):
         self._widget.timer.start(self.factory.update_ms)
         self._widget.timer.timeout.connect(self.object.evolve_board)
         self._widget.timer.timeout.connect(self.update_editor)
+
+    def set_drawing(self, event):
+        if event.button() == QtCore.Qt.LeftButton:
+            self.drawing = True
+
+    def unset_drawing(self, event):
+        if event.button() == QtCore.Qt.LeftButton:
+            self.drawing = False
+
+    def draw_pixel(self, event):
+        x = event.pos().x()
+        y = event.pos().y()
+
+        self.object.draw(np.array([y, x]))
 
     def update_editor(self):
         img = QtGui.QImage(
