@@ -47,13 +47,15 @@ class MncaView(ModelView):
                     VGroup(
                         Item("model.paused", label="Pause"),
                         Item("model.board_size"),
-                        Item("model.rules"),
-                        Item("randomize_rules"),
                     ),
                     VGroup(
                         Item("model.reset_life_pct", label="Reset Life %"),
                         Item("reset_board"),
                     )
+                ),
+                VGroup(
+                    Item("model.rules"),
+                    Item("randomize_rules"),
                 ),
                 springy=True,
             ),
@@ -69,21 +71,24 @@ if __name__ == "__main__":
 
     import os
     # Add masks
-    mask_files = ["mask_a", "mask_b", "mask_c", "mask_d"]
+    #mask_files = ["mask_a", "mask_b", "mask_c", "mask_d"]
     model.masks = {}
-    for m_file in mask_files:
-        with open(os.path.join("mnca_app", "data", "masks", m_file+".txt"), "r") as f:
+    for m_file in os.listdir("mnca_app/data/masks"):
+        with open(os.path.join("mnca_app", "data", "masks", m_file), "r") as f:
             mask = [[int(n) for n in line.split()] for line in f.readlines()]
             model.masks[m_file] = np.array(mask)
 
     # Add rules
     model.rules = [
-        Rule(mask=mask_files[0], limits=(0, 17), result=DEATH),
-        Rule(mask=mask_files[0], limits=(40, 42), result=LIFE),
-        Rule(mask=mask_files[1], limits=(10, 13), result=LIFE),
-        Rule(mask=mask_files[2], limits=(9, 21), result=DEATH),
-        Rule(mask=mask_files[3], limits=(78, 89), result=DEATH),
-        Rule(mask=mask_files[3], limits=(108, None), result=DEATH),
+        Rule(mask="8_neighbor.txt", limits=(3, 7), result=DEATH),
+        Rule(mask="8_neighbor.txt", limits=(2, 5), result=DEATH),
+        Rule(mask="1w1l.txt", limits=(1, 1), result=DEATH),
+        Rule(mask="1w1l.txt", limits=(1, 4), result=LIFE),
+        Rule(mask="9_neighbor.txt", limits=(6, 9), result=LIFE),
+        Rule(mask="1w2l.txt", limits=(1, 5), result=LIFE),
+        Rule(mask="9_neighbor.txt", limits=(0, 7), result=DEATH),
+        Rule(mask="9_neighbor.txt", limits=(1, 4), result=LIFE),
+        Rule(mask="8_neighbor.txt", limits=(6, 8), result=DEATH),
     ]
 
     view = MncaView(model=model)

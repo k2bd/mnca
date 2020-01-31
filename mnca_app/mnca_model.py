@@ -65,7 +65,7 @@ class MncaModel(HasRequiredTraits):
             result = random.choice([DEATH, LIFE])
 
             rules.append(Rule(mask=mask_name, limits=(lower, upper), result=result))
-            print(f"Rule(mask=masks[{mask_name}], limits=({lower}, {upper}), result={result})")
+            print(f"Rule(mask=masks['{mask_name}'], limits=({lower}, {upper}), result={result})")
         print("----------")
 
         self.rules = rules
