@@ -119,6 +119,7 @@ class MncaView(ModelView):
                     )
                 ),
                 VGroup(
+                    Item("model.masks_dir", label="Masks Dir"),
                     UItem("model.rules", editor=self.rules_table()),
                     UItem("randomize_rules"),
                 ),

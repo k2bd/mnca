@@ -13,6 +13,6 @@ def load_masks(dir_name):
     for mask_name in os.listdir(dir_name):
         with open(os.path.join(dir_name, mask_name), "r") as f:
             mask = [[int(n) for n in line.split()] for line in f.readlines()]
-            masks[mask_name] = np.array(mask)
+            masks[mask_name] = np.array(mask, ndmin=2)
 
     return masks

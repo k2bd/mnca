@@ -10,8 +10,10 @@ from traits.api import (
     Bool,
     Color,
     Dict,
+    Directory,
     Float,
     HasRequiredTraits,
+    Instance,
     List,
     on_trait_change,
     Range,
@@ -20,9 +22,10 @@ from traits.api import (
     Unicode,
 )
 
+from mnca_app.mask import load_masks
 from mnca_app.rule import Rule, LIFE, DEATH, BOTH
 
-MASKS_DIR = pkg_resources.resource_filename("mnca_app", "data/masks")
+DEFAULT_MASKS_DIR = pkg_resources.resource_filename("mnca_app", "data/masks")
 
 RANDOM = "Random"
 ZEROS = "Zeros"
@@ -52,11 +55,14 @@ class MncaModel(HasRequiredTraits):
     #: Board for the MNCA
     board = Array(shape=(None, None))
 
+    #: Directory to parse masks from
+    masks_dir = Directory(DEFAULT_MASKS_DIR, exists=True)
+
     #: Available masks (name to array)
     masks = Dict(Unicode, Array(shape=(None, None)))
 
     #: Rules
-    rules = List(Rule, required=False)
+    rules = List(Instance(Rule), required=False)
 
     #: Pause updating the model
     paused = Bool(False)
@@ -67,16 +73,14 @@ class MncaModel(HasRequiredTraits):
     live_color = Color("white")
     dead_color = Color("black")
 
+    @on_trait_change("masks_dir")
+    def set_masks(self):
+        self.masks = load_masks(self.masks_dir)
+        self.randomize_rules()
+
     def _masks_default(self):
-        """
-        By default, all masks in the masks directory are loaded
-        """
-        masks = {}
-        for m_file in os.listdir(MASKS_DIR):
-            with open(os.path.join(MASKS_DIR, m_file), "r") as f:
-                mask = [[int(n) for n in line.split()] for line in f.readlines()]
-                masks[m_file] = np.array(mask)
-        return masks
+        # TODO: this is a bit hacky to help with traits init of this class
+        return load_masks(DEFAULT_MASKS_DIR)
 
     @on_trait_change("board_size")
     def reset_board(self):
