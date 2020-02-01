@@ -18,7 +18,7 @@ from traits.api import (
     Unicode,
 )
 
-from mnca_app.rule import Rule, LIFE, DEATH
+from mnca_app.rule import Rule, LIFE, DEATH, BOTH
 
 MASKS_DIR = pkg_resources.resource_filename("mnca_app", "data/masks")
 
@@ -83,7 +83,8 @@ class MncaModel(HasRequiredTraits):
         print("----------")
         for rule in self.rules:
             print(
-                "Rule(mask=masks['{rule.mask}'], "
+                "mask='{rule.mask}', "
+                "acts_on={rule.acts_on!r}, "
                 "lower_limit={rule.lower_limit}, "
                 "upper_limit={rule.upper_limit}, "
                 "result={rule.result})".format(rule=rule)
@@ -102,6 +103,8 @@ class MncaModel(HasRequiredTraits):
             lower = min([r_a, r_b])
             upper = max([r_a, r_b])
 
+            acts_on = random.choice([0, 1, BOTH])
+
             result = random.choice([DEATH, LIFE])
 
             rules.append(
@@ -109,6 +112,7 @@ class MncaModel(HasRequiredTraits):
                     mask=mask_name,
                     lower_limit=lower,
                     upper_limit=upper,
+                    acts_on=acts_on,
                     result=result
                 )
             )
@@ -164,6 +168,10 @@ class MncaModel(HasRequiredTraits):
                 rule2[:] = 1
 
             slc = (rule1 & rule2 & gridmask)
+
+            if rule.acts_on != BOTH:
+                acts_on = np.where(self.board == rule.acts_on, 1, 0)
+                slc &= acts_on
 
             self.board[np.where(slc)] = 1 if rule.result == LIFE else 0
             gridmask[np.where(slc)] = 0

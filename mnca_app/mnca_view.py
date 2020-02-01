@@ -54,6 +54,7 @@ class MncaView(ModelView):
                 Item("mask", editor=EnumEditor(values=sorted(self.model.masks.keys()))),
                 Item("lower_limit", editor=optional_int_editor()),
                 Item("upper_limit", editor=optional_int_editor()),
+                Item("acts_on"),
                 Item("result"),
             ),
             columns=[
@@ -70,6 +71,11 @@ class MncaView(ModelView):
                 ObjectColumn(
                     name="upper_limit",
                     label="Upper",
+                    editable=False,
+                ),
+                ObjectColumn(
+                    name="acts_on",
+                    label="Acts On",
                     editable=False,
                 ),
                 ObjectColumn(
