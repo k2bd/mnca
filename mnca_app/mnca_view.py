@@ -40,6 +40,11 @@ class MncaView(ModelView):
     def _reset_board_fired(self):
         self.model.reset_board()
 
+    clear_board = Button("Clear Board")
+
+    def _clear_board_fired(self):
+        self.model.clear_board()
+
     def rules_table(self):
         return TableEditor(
             sortable=False,
@@ -96,7 +101,8 @@ class MncaView(ModelView):
                     ),
                     VGroup(
                         Item("model.reset_life_pct", label="Reset Life %"),
-                        Item("reset_board"),
+                        UItem("reset_board"),
+                        UItem("clear_board"),
                     )
                 ),
                 VGroup(

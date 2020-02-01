@@ -107,6 +107,9 @@ class MncaModel(HasRequiredTraits):
             for j in range(self.board_size[1]):
                 self.board[i, j] = 1 if random.random() < self.reset_life_pct else 0
 
+    def clear_board(self, value=0):
+        self.board[:, :] = value
+
     def draw(self, target):
         """
         Draw on the board using the current brush at the target coordinates
@@ -114,7 +117,8 @@ class MncaModel(HasRequiredTraits):
         for offset in np.transpose(np.where(self.brush)):
             offset -= np.array(self.brush.shape) // 2
             coord = target + offset
-            self.board[coord[0], coord[1]] = 1
+            if coord[0] < self.board.shape[0] and coord[1] < self.board.shape[1]:
+                self.board[coord[0], coord[1]] = 1
 
     def evolve_board(self):
         """
