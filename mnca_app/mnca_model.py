@@ -76,8 +76,6 @@ class MncaModel(HasRequiredTraits):
 
     def randomize_rules(self):
         rules = []
-        print("----------")
-        print("New Rules:")
         for i in range(random.randint(2, 10)):
             mask_name = random.choice(list(self.masks.keys()))
             mask = self.masks[mask_name]
