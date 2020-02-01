@@ -2,6 +2,7 @@ import numpy as np
 from traits.api import Instance, Button
 from traitsui.api import (
     EnumEditor,
+    HGroup,
     HSplit,
     Item,
     ModelView,
@@ -89,16 +90,22 @@ class MncaView(ModelView):
     def default_traits_view(self):
         view = View(
             HSplit(
-                UItem(
-                    "model.board",
-                    editor=BoolArrayEditor(
-                        scale=True,
-                        allow_upscaling=False,
-                        allow_clipping=False,
-                        preserve_aspect_ratio=True,
+                VGroup(
+                    UItem(
+                        "model.board",
+                        editor=BoolArrayEditor(
+                            scale=True,
+                            allow_upscaling=False,
+                            allow_clipping=False,
+                            preserve_aspect_ratio=True,
+                        ),
+                        resizable=True,
+                        springy=True,
                     ),
-                    resizable=True,
-                    springy=True,
+                    HGroup(
+                        Item("model.live_color", label="Life Colour"),
+                        Item("model.dead_color", label="Dead Colour"),
+                    ),
                 ),
                 VSplit(
                     VGroup(

@@ -8,12 +8,14 @@ from scipy.ndimage import convolve
 from traits.api import (
     Array,
     Bool,
+    Color,
     Dict,
     Float,
     HasRequiredTraits,
     List,
     on_trait_change,
     Range,
+    RGBColor,
     Tuple,
     Unicode,
 )
@@ -61,6 +63,9 @@ class MncaModel(HasRequiredTraits):
 
     #: Drawing brush
     brush = Array(shape=(None, None), value=DEFAULT_BRUSH)
+
+    live_color = Color("white")
+    dead_color = Color("black")
 
     def _masks_default(self):
         """

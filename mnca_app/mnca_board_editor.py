@@ -7,8 +7,6 @@ from traitsui.api import BasicEditorFactory
 from traitsui.qt4.editor import Editor
 from traitsui.qt4.image_editor import QImageView
 
-COLORTABLE = [QtGui.qRgb(0, 0, 0), QtGui.qRgb(255, 255, 255)]
-
 
 class _BoolArrayEditor(Editor):
 
@@ -54,7 +52,7 @@ class _BoolArrayEditor(Editor):
             self.object.board_size[0],
             QtGui.QImage.Format_Indexed8
         )
-        img.setColorTable(COLORTABLE)
+        img.setColorTable([self.object.dead_color.rgb(), self.object.live_color.rgb()])
         self.control.setPixmap(QtGui.QPixmap.fromImage(img))
 
 #    def init_board
