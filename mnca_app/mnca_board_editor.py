@@ -55,8 +55,6 @@ class _BoolArrayEditor(Editor):
         img.setColorTable([self.object.dead_color.rgb(), self.object.live_color.rgb()])
         self.control.setPixmap(QtGui.QPixmap.fromImage(img))
 
-#    def init_board
-
 
 class BoolArrayEditor(BasicEditorFactory):
 
