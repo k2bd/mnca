@@ -35,6 +35,7 @@ class _BoolArrayEditor(Editor):
     def set_drawing(self, event):
         if event.button() == QtCore.Qt.LeftButton:
             self.drawing = True
+        self.draw_pixel(event)
 
     def unset_drawing(self, event):
         if event.button() == QtCore.Qt.LeftButton:
