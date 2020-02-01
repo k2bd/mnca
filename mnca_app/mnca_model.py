@@ -1,3 +1,5 @@
+import os
+import pkg_resources
 import random
 
 import numpy as np
@@ -17,6 +19,8 @@ from traits.api import (
 )
 
 from mnca_app.rule import Rule, LIFE, DEATH
+
+MASKS_DIR = pkg_resources.resource_filename("mnca_app", "data/masks")
 
 RANDOM = "Random"
 ZEROS = "Zeros"
@@ -57,6 +61,17 @@ class MncaModel(HasRequiredTraits):
 
     #: Drawing brush
     brush = Array(shape=(None, None), value=DEFAULT_BRUSH)
+
+    def _masks_default(self):
+        """
+        By default, all masks in the masks directory are loaded
+        """
+        masks = {}
+        for m_file in os.listdir(MASKS_DIR):
+            with open(os.path.join(MASKS_DIR, m_file), "r") as f:
+                mask = [[int(n) for n in line.split()] for line in f.readlines()]
+                masks[m_file] = np.array(mask)
+        return masks
 
     @on_trait_change("board_size")
     def reset_board(self):

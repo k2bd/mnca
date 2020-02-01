@@ -121,15 +121,6 @@ if __name__ == "__main__":
         board_size=(400, 400),
     )
 
-    import os
-    # Add masks
-    #mask_files = ["mask_a", "mask_b", "mask_c", "mask_d"]
-    model.masks = {}
-    for m_file in os.listdir("mnca_app/data/masks"):
-        with open(os.path.join("mnca_app", "data", "masks", m_file), "r") as f:
-            mask = [[int(n) for n in line.split()] for line in f.readlines()]
-            model.masks[m_file] = np.array(mask)
-
     # Add rules
     model.rules = [
         Rule(mask="8_neighbor.txt", lower_limit=3, upper_limit=7, result=DEATH),
