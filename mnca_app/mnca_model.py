@@ -1,4 +1,3 @@
-import os
 import pkg_resources
 import random
 
@@ -17,7 +16,6 @@ from traits.api import (
     List,
     on_trait_change,
     Range,
-    RGBColor,
     Tuple,
     Unicode,
 )

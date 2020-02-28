@@ -18,7 +18,10 @@ setuptools.setup(
     #     "Intended Audience :: Developers",
     #     "Topic :: Software Development",
     # ],
+    entry_points={
+        'console_scripts': ['mnca=mnca_app.__main__:main'],
+    },
     license="MIT",
-    install_requires=["traits", "traitsui", "numpy"],
+    install_requires=["traits", "traitsui", "numpy", "scipy"],
     python_requires='>=3.6',
 )

@@ -3,7 +3,6 @@ from traits.api import (
     Enum,
     HasRequiredTraits,
     Int,
-    Tuple,
     Unicode,
 )
 
