@@ -8,7 +8,7 @@ setuptools.setup(
     description="TODO",
     long_description="## TODO",
     long_description_content_type="text/markdown",
-    url="https://github.com/k2bd",
+    url="https://github.com/k2bd/mnca",
     packages=setuptools.find_packages(),
     # classifiers=[
     #     "Programming Language :: Python :: 3",
@@ -22,6 +22,6 @@ setuptools.setup(
         'console_scripts': ['mnca=mnca_app.__main__:main'],
     },
     license="MIT",
-    install_requires=["traits", "traitsui", "numpy", "scipy"],
+    install_requires=["PyQt5", "pyface", "traits", "traitsui", "numpy", "scipy"],
     python_requires='>=3.6',
 )
